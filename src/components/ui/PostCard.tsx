@@ -10,7 +10,7 @@ import { Avatar, AvatarImage } from "./avatar";
 import {formatDistanceToNow} from 'date-fns'
 import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { Button } from "./button";
-import { HeartIcon, MessageCircleIcon, SendIcon } from "lucide-react";
+import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import { Textarea } from "./textarea";
 
 type Posts = Awaited<ReturnType<typeof GetPosts>>
@@ -99,7 +99,7 @@ function PostCard({post,dbUserId} : {post:Post; dbUserId:string|null}){
                                     <div className=" flex items-center space-x-2 text-sm text-muted-foreground">
                                         <Link href={`/profile/${post.author.username}`}>@{post.author.username}</Link>
                                         <span>•</span>
-                                        <span>{formatDistanceToNow(new Date(post.createdAt))}ago</span>
+                                        <span>{formatDistanceToNow(new Date(post.createdAt))} ago</span>
                                     </div>
                                 </div>
                                 {/* Check if current user is the post author */}
@@ -183,40 +183,49 @@ function PostCard({post,dbUserId} : {post:Post; dbUserId:string|null}){
                         ))}
                     </div>
                     {user ? (
-                        <div className="flex space-x-3">
-                            <Avatar className="size-8 flex-shrink-0">
-                                <AvatarImage src={user?.imageUrl || "/avatar.png"} />
-                            </Avatar>
-                            <div className="flex-1">
-                                <Textarea 
-                                placeholder="Write a comment..."
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                className="min-h-[80px] resize-none"
-                                />
-                                <div className="flex justify-end mt-2">
-                                    <Button
-                                    size="sm"
-                                    onClick={handleAddComment}
-                                    className="flex items-center gap-2"
-                                    disabled={!newComment.trim() || isCommenting}>
-                                        {isCommenting ? (
-                                            "Posting..."
-                                        ) : (
-                                            <>
-                                            <SendIcon className="size-4" />
-                                            Comment
-                                            </>
-                                        )}
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                
-
+                <div className="flex space-x-3">
+                  <Avatar className="size-8 flex-shrink-0">
+                    <AvatarImage src={user?.imageUrl || "/avatar.png"} />
+                  </Avatar>
+                  <div className="flex-1">
+                    <Textarea
+                      placeholder="Write a comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      className="min-h-[80px] resize-none"
+                    />
+                    <div className="flex justify-end mt-2">
+                      <Button
+                        size="sm"
+                        onClick={handleAddComment}
+                        className="flex items-center gap-2"
+                        disabled={!newComment.trim() || isCommenting}
+                      >
+                        {isCommenting ? (
+                          "Posting..."
+                        ) : (
+                          <>
+                            <SendIcon className="size-4" />
+                            Comment
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center p-4 border rounded-lg bg-muted/50">
+                  <SignInButton mode="modal">
+                    <Button variant="outline" className="gap-2">
+                      <LogInIcon className="size-4" />
+                      Sign in to comment
+                    </Button>
+                  </SignInButton>
+                </div>
+              )}
 
                 </div>
+               
             )}
       
         </div>
